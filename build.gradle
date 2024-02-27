@@ -1,0 +1,103 @@
+/*
+ * build.gradle
+ * Copyright 2018 Radiologics, Inc
+ * Developer: James Ransford
+ */
+ 
+ 
+import org.gradle.internal.jvm.Jvm
+
+group 'com.radiologics'
+version '1.0.0'
+
+apply plugin: 'java'
+apply plugin: 'maven-publish'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'net.linguica.maven-settings'
+
+buildscript {
+    ext {
+        vXnatDev = '1.8.4'
+    }
+    repositories {
+        maven { url "https://plugins.gradle.org/m2/" }
+        mavenLocal()
+        maven { url "https://nrgxnat.jfrog.io/nrgxnat/libs-release" }
+        maven { url "https://nrgxnat.jfrog.io/nrgxnat/libs-snapshot" }
+        mavenCentral()
+    }
+    dependencies {
+        classpath "io.spring.gradle:dependency-management-plugin:1.0.6.RELEASE"
+        classpath "net.linguica.gradle:maven-settings-plugin:0.5"           
+    }
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenLocal()
+    maven { url "https://nrgxnat.jfrog.io/nrgxnat/libs-release" }
+    maven { url "https://nrgxnat.jfrog.io/nrgxnat/libs-snapshot" }
+    mavenCentral()
+}
+
+dependencyManagement.imports {
+    mavenBom "org.nrg:parent:${vXnatDev}"
+}
+
+dependencies {
+    implementation ("org.nrg.xnat:web"){
+        exclude group: '*'
+    }
+    
+    implementation ("org.nrg.xdat:core"){
+        exclude group: '*'
+    }
+
+    implementation "org.nrg.xnat:xnat-data-models"
+    implementation "org.nrg:config"
+
+    implementation "com.fasterxml.jackson.core:jackson-core"
+    implementation "com.fasterxml.jackson.core:jackson-databind"
+    implementation "dcm4che:dcm4che-core"
+
+    implementation "commons-beanutils:commons-beanutils"
+    implementation "commons-codec:commons-codec"
+    implementation "commons-collections:commons-collections"
+    implementation "commons-configuration:commons-configuration"
+    implementation "commons-digester:commons-digester"
+    implementation "commons-discovery:commons-discovery"
+    implementation "commons-fileupload:commons-fileupload"
+    implementation "commons-net:commons-net"
+
+    implementation "com.noelios.restlet:com.noelios.restlet"
+    implementation "com.noelios.restlet:com.noelios.restlet.ext.servlet"
+    implementation "org.restlet:org.restlet.ext.fileupload"
+}
+
+idea {
+    module {
+        inheritOutputDirs = false
+        outputDir = compileJava.destinationDir
+        testOutputDir = compileTestJava.destinationDir
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+    repositories{ 
+        maven {
+            name "Radiologics"
+            def releasesRepoUrl =  "https://maven.dev.radiologics.com/repository/internal/"
+            def snapshotsRepoUrl = "https://maven.dev.radiologics.com/repository/snapshots/"
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl            
+        }
+    }
+}

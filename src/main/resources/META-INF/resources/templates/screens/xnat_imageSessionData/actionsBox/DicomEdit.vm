@@ -1,0 +1,69 @@
+<!-- Sequence: 100 -->
+## Copyright 2018 Radiologics, Inc
+## Developer: James Dickson @radiologics.com
+#if($user.checkFeature($om,"DicomEdit"))
+#if($om.getItem().getStatus() == 'active')
+<link rel="stylesheet" href="$content.getURI("scripts/split-pane-master/split-pane.css")"/>
+<script type="text/javascript" src="$content.getURI("scripts/split-pane-master/split-pane.js")"></script>
+
+  	<li id="lnch_DicomEdit_li" class="yuimenuitem">
+   	 <a id="lnch_DicomEdit_a" class="yuimenuitemlabel" href="" onclick="XNAT.app.DicomEdit.show();return false;">Modify DICOM</A>
+   	</li>
+
+	<!-- begin upload dialog -->
+	<div id="lnch_DicomEdit_dialog" style="visibility:hidden"> 
+	    <div class="hd">Select DICOM headers to modify</div> 
+		<div class="bd">
+			<table border='0' style='width:100%'>
+				<tr>
+					<td valign="top" style="width:30%">
+						<form id="lnch_DicomEdit_upload_frm">
+        					<table style="bgcolor:white">
+								<tr><td>Select the DICOM scans you would like to edit:</td></tr>
+        					#set($scanCount = 0)
+							#set($allscans ='')
+        					#foreach($scan in $om.getSortedScans())
+        						<tr><td>
+									<input type="checkbox" id="scan_$scanCount" name="scan" value="$scan.getId()" CHECKED/>
+									<label for="scan_$scanCount">$scan.getId(): $!scan.getType()</label>
+								</td></tr>
+        						#set($scanCount = $scanCount + 1)
+								#set($allscans = "$allscans,$scan.getId()")
+        					#end
+							</table>
+						</form>
+					</td>
+					<td valign="top" style="width:70%">
+						<div id='dicom_table'></div>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div> 		
+	<!--pulling dicom json object http://192.168.50.57:8080/REST/services/dicomdump?src=/archive/projects/batch5TEST/experiments/CAIR211_E00005/scans/2?format=json -->
+    <script type="text/javascript" src="$content.getURI("scripts/pipelines/RunDicomEdit.js")"></script>
+    <script>
+        XNAT.app.DicomEdit.expt_id='$!om.getId()';
+        XNAT.app.DicomEdit.project='$!om.getProject()';
+		XNAT.app.DicomEdit.source='/archive/projects/$om.getProject()/experiments/$om.getId()/scans/$allscans';
+    
+	jq('#lnch_DicomEdit_upload_frm :checkbox').change(function() {
+    // this will contain a reference to the checkbox   
+   
+	allscans='-1'
+	jq('#lnch_DicomEdit_upload_frm input:checkbox:checked').each(function() {
+    	allscans=allscans+','+jq(this).val();
+		});
+	XNAT.app.DicomEdit.source='/archive/projects/'+XNAT.app.DicomEdit.project+'/experiments/'+XNAT.app.DicomEdit.expt_id+'/scans/'+allscans;
+	XNAT.app.DicomEdit.doTable();
+	
+});
+	
+	</script>
+	
+#end
+#end
+	
+	
+	
+	

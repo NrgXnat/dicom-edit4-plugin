@@ -1,0 +1,26 @@
+(0002,0002)
+ MediaStorageSOPClassUID
+(0002,0003)
+ MediaStorageSOPInstanceUID
+(0002,0010)
+TransferSyntaxUID
+(0002,0012)
+ ImplementationClassUID
+(0008,0016)
+SOPClassUID
+(0008,0018)
+SOPInstanceUID
+(0008,1150)
+ReferencedSOPClassUID
+(0008,1155)
+ReferencedSOPInstanceUID
+(0020,000D)
+StudyInstanceUID
+(0020,000E)
+SeriesInstanceUID
+(0020,0052)
+FrameOfReferenceUID
+(0088,0140)
+StorageMediaFileSetUID
+(0008,0014)
+Instance Creator UID

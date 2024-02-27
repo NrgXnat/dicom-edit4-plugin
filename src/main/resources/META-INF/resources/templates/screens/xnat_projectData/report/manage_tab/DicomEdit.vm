@@ -1,0 +1,114 @@
+##Copyright 2012 Radiologics, Inc
+##Developer: Tim Olsen tim@radiologics.com
+
+<h3>DICOM Edit Configuration</h3>
+<div>
+	<table id="dicomedit_script_table">
+		<tr>
+			<td colspan="2" class="highlighted" id="dicomedit_script_container">
+				<table>
+					<tr>
+						<td></td>
+						<td>Enable Filter: <input type="checkbox" name="dicomedit_enabled" id="dicomedit_enabled" /></td>
+					</tr>	
+					<tr>
+						<td></td>
+						<td>DICOM Edit Whitelist</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td><textarea rows="20" cols="80" type="text" name="dicomedit_whitelist" id="dicomedit_whitelist" size="100" disabled="disabled"></textarea></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>DICOM Edit Blacklist</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td><textarea rows="20" cols="80" type="text" name="dicomedit_blacklist" id="dicomedit_blacklist" size="100" disabled="disabled"></textarea></td>
+					</tr>
+					<tr>
+						<td COLSPAN="2"><input type="button" id="dicomedit_script_save" value="Save" onclick="XNAT.app.dicomeditUpdate();" /></td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</div>
+	
+<script>
+	var dicomedit_whitelist = jq('#dicomedit_whitelist');
+	var dicomedit_blacklist = jq('#dicomedit_blacklist');
+	var dicomedit_enabled =   jq('#dicomedit_enabled');
+	var enabled='disabled';
+	
+	// Enable/Disable the whitelist & blacklist text boxes
+	XNAT.app.toggleDicomEditTextBoxes = function(){
+		if(dicomedit_enabled.is(':checked')){
+			dicomedit_whitelist.removeAttr("disabled");
+			dicomedit_blacklist.removeAttr("disabled");
+		}else{
+			dicomedit_whitelist.attr("disabled","disabled");
+			dicomedit_blacklist.attr("disabled","disabled");
+		}
+	};
+	// Update whitelist & blacklist's disabled flag when the checkbox changes
+	dicomedit_enabled.change(XNAT.app.toggleDicomEditTextBoxes);
+
+	XNAT.app.dicomeditUpdate=function(){
+		this.dicomedit_whitelist=YUIDOM.get("dicomedit_whitelist").value;
+		this.dicomedit_blacklist=YUIDOM.get("dicomedit_blacklist").value;
+		this.dicomedit_enabled=YUIDOM.get("dicomedit_enabled").checked;
+
+		if (!this.dicomedit_enabled) {
+			enabled = 'disabled'
+		}else{
+			enabled = 'enabled';
+		}
+		
+		openModalPanel('dicomedit','Saving DICOM Edit Configuration');
+		YAHOO.util.Connect.asyncRequest('PUT',serverRoot+"/data/projects/$project.getId()/config/dicomedit/script?status="+enabled+"&inbody=true&content=JSON&XNAT_CSRF=" + window.csrfToken,
+				{	
+				success : function(){
+					closeModalPanel('dicomedit');
+					showMessage("page_body","Update","DICOM Edit Configuration updated successfully");
+				},
+				failure: function(){
+					closeModalPanel('dicomedit');
+					showMessage("page_body","Failure","Failed to store updated DICOM Edit Configuration");
+				},
+					cache:false, // Turn off caching for IE
+					scope: this
+				},
+				YAHOO.lang.JSON.stringify({"dicomedit_whitelist":this.dicomedit_whitelist,"dicomedit_blacklist":this.dicomedit_blacklist}));
+	}	
+	
+	XNAT.app.dicomeditLoad=function(obj){
+		try{
+			var results = YAHOO.lang.JSON.parse(obj.responseText);
+			var config = results.ResultSet.Result[0]; // TODO: This is way too trusting. There should be validation here.
+			var enabled = config.status && (config.status == 'enabled' || config.status == 'true');
+ 
+			XNAT.app.dicomedit= YAHOO.lang.JSON.parse(config.contents);
+			if(XNAT.app.dicomedit.dicomedit_whitelist!=undefined){
+				YUIDOM.get("dicomedit_whitelist").value=XNAT.app.dicomedit.dicomedit_whitelist;
+			}
+			if(XNAT.app.dicomedit.dicomedit_blacklist!=undefined){
+				YUIDOM.get("dicomedit_blacklist").value=XNAT.app.dicomedit.dicomedit_blacklist;
+			}
+			if(enabled!=undefined){
+				YUIDOM.get("dicomedit_enabled").checked=enabled;
+				XNAT.app.toggleDicomEditTextBoxes();
+			}
+		}catch(o){
+			alert(o);
+		}
+	}
+
+	YAHOO.util.Connect.asyncRequest('GET', serverRoot+'/data/projects/$project.getId()/config/dicomedit/script?format=json', {
+		success : XNAT.app.dicomeditLoad, 
+		failure : function(){}, 
+		cache : false, 
+		scope : this
+	});
+</script>

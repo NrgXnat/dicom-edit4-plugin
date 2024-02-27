@@ -1,0 +1,47 @@
+#
+# Copyright 2018 Radiologics, Inc
+# Developer: James Ransford ransfordj@radiologics.com
+#
+
+dicomEditWhiteList:
+    kind: panel.textarea
+    name: dicomedit_whitelist
+    id: dicomedit_whitelist
+    label: Dicom Edit Whitelist
+    description: The Dicom Edit Whitelist.
+    
+dicomEditBlackList:
+    kind: panel.textarea
+    name: dicomedit_blacklist
+    id: dicomedit_blacklist
+    label: Dicom Edit Blacklist
+    description: The Dicom Edit Blacklist.
+
+dicomEditTab:
+    kind: tab
+    name: dicomEditTab
+    label: Dicom Edit
+    group: crPluginsTabGroup
+    contents:
+        dicomEditSettingsForm:
+            kind: panel.form
+            name: dicomEditSettingsForm
+            label: Dicom Edit Configuration
+            method: POST
+            url: /xapi/siteConfig
+            contentType: json
+            contents:
+                ${dicomEditWhiteList}
+                ${dicomEditBlackList}
+
+# Group these settings with other XNAT CR feature settings
+siteSettings:
+    kind: tabs
+    name:  xnatCRSettings
+    label: XNAT-CR Settings
+    meta:
+        tabGroups:
+            crPluginsTabGroup: XNAT-CR Settings
+    contains: tabs
+    tabs:
+        ${dicomEditTab}

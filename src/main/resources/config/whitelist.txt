@@ -1,0 +1,8 @@
+Date of Birth
+(0010,0030)
+Weight 
+(0010,1030)
+Net administered activity 
+(0018,1074)
+Injection Time
+(0018,1072)

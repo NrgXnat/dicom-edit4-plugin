@@ -1,0 +1,139 @@
+<style> 
+/* --- global --- */
+body { 
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 100%;
+}
+ 
+/* --- dicomedit elements --- */
+#dicomedit {
+	overflow:auto;
+	
+}
+.dicomeditPanel {
+	background:#f1f1f2;
+	border:1px solid #bbbdbf;
+	border-radius:6px;
+	-moz-border-radius:6px;
+	-webkit-border-radius:6px;
+	display:block;
+	float:left;
+	font-size:10px;
+	line-height:1.5em;
+	height:270px;
+	margin:0 16px 16px 0;
+	padding:8px;
+	position:relative;
+}
+ 
+.col1 {	width:250px; }
+.col2 { width:850px; }
+
+.dicomeditPanel h1 {
+	background:url($content.getURI("images/stats-h1-bg.png")) repeat;
+	border-bottom:1px solid #bbbdbf;
+	border-radius: 2px 2px 0 0;
+	-moz-border-radius: 2px 2px 0 0;
+	-webkit-border-radius: 2px 2px 0 0;
+	font-size:16px;
+	font-weight:normal;
+	display:block;
+	height:29px;
+	margin:-6px -6px 6px -6px;
+	padding:6px 6px 0 6px;
+	overflow:hidden;
+}
+.dicomeditPanel h2, 
+.dicomeditPanel h3, 
+.dicomeditpanel p {
+	margin:0 0 3px; 
+	padding:0;
+}
+ 
+.dicomeditPanel a {
+	text-decoration:none;
+}
+ 
+.dicomeditPanel ul {
+	list-style:none;
+	margin:0;
+	padding:0;
+}
+.dicomeditPanel li {
+	padding-bottom:.5em;
+}
+ 
+.dicomeditPanelCommand {
+	position:absolute;
+	bottom:8px;
+	background:url($content.getURI("images/stats-h1-bg.png")) repeat;
+	display:block;
+	margin:0 -6px -6px -6px;
+	padding:6px 0 6px 6px;
+	width:100%;
+}
+.innerPanel {
+	height: 150px;
+	overflow-y:scroll;
+}
+ 
+/* --- stat styles --- */
+.statBar {
+	background:#8d94f4; 
+	display:block;
+	padding:1px;
+	margin:0;
+}
+ 
+/* --- project list box --- */
+.dicomeditList {
+	border-bottom: 1px #ccc solid; 
+	padding: 0.75em 0;
+}
+.dicomeditList:nth-child(2n+2) {
+	background:#e7e7e7;
+}
+.dicomeditList h3 {
+	font-size:11px;
+}
+.dicomeditList h2 a{
+	font-size:14px;
+	font-weight:500;
+}
+.dicomeditList p, 
+.dicomeditList ul {
+	margin-top:.25em;
+}
+.dicomeditList ul {
+	list-style-type:square;
+	margin-left:2em;
+}
+.dicomeditList p,
+.dicomeditList li {
+	padding-bottom:0;
+	margin-bottom:0;
+}
+.thumbnail {
+	width:100px;
+	margin-right:10px;
+}
+.thumbnail img {
+	max-width:100%;
+}
+.thumbnailList {
+}
+ 
+/* --- priority states ---*/
+.lowPriority {
+	color:#777;
+	font-style:italic;
+}
+
+.dicomeditPanel a{
+	font-weight:500;
+}
+
+#min_expt_list {
+	min-height: 140px;
+}
+</style>
