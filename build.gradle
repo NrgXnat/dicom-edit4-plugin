@@ -15,7 +15,6 @@ apply plugin: 'maven-publish'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'io.spring.dependency-management'
-apply plugin: 'net.linguica.maven-settings'
 
 buildscript {
     ext {
@@ -30,7 +29,6 @@ buildscript {
     }
     dependencies {
         classpath "io.spring.gradle:dependency-management-plugin:1.1.7"
-        classpath "net.linguica.gradle:maven-settings-plugin:0.5"           
     }
 }
 
