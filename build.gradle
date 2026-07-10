@@ -8,18 +8,17 @@
 import org.gradle.internal.jvm.Jvm
 
 group 'com.radiologics'
-version '1.0.0'
+version "1.1.0-SNAPSHOT"
 
 apply plugin: 'java'
 apply plugin: 'maven-publish'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'io.spring.dependency-management'
-apply plugin: 'net.linguica.maven-settings'
 
 buildscript {
     ext {
-        vXnatDev = '1.8.4'
+        vXnatDev = '1.10.1-SNAPSHOT'
     }
     repositories {
         maven { url "https://plugins.gradle.org/m2/" }
@@ -29,13 +28,14 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath "io.spring.gradle:dependency-management-plugin:1.0.6.RELEASE"
-        classpath "net.linguica.gradle:maven-settings-plugin:0.5"           
+        classpath "io.spring.gradle:dependency-management-plugin:1.1.7"
     }
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
 
 repositories {
     mavenLocal()
@@ -57,7 +57,7 @@ dependencies {
         exclude group: '*'
     }
 
-    implementation "org.nrg.xnat:xnat-data-models"
+    // xnat-data-models merged into xnat-web in monorepo 1.10
     implementation "org.nrg:config"
 
     implementation "com.fasterxml.jackson.core:jackson-core"
@@ -76,13 +76,17 @@ dependencies {
     implementation "com.noelios.restlet:com.noelios.restlet"
     implementation "com.noelios.restlet:com.noelios.restlet.ext.servlet"
     implementation "org.restlet:org.restlet.ext.fileupload"
+    implementation "org.restlet:org.restlet"
+    compileOnly "org.slf4j:slf4j-api"
+    compileOnly "log4j:log4j:1.2.17"
+    compileOnly "org.nrg.dicom:mizer"
 }
 
 idea {
     module {
         inheritOutputDirs = false
-        outputDir = compileJava.destinationDir
-        testOutputDir = compileTestJava.destinationDir
+        outputDir = compileJava.destinationDirectory.asFile.get()
+        testOutputDir = compileTestJava.destinationDirectory.asFile.get()
     }
 }
 
